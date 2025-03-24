@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0", maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>dEagle Генератор паролей</title>
     <style>
         :root {
@@ -30,6 +30,7 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
+            touch-action: pan-x pan-y; /* Предотвращает масштабирование */
         }
 
         .container {
@@ -226,7 +227,7 @@
         }
 
         #copyBtnFull:hover {
-            background-color: #0ea5e9; /* darker teal */
+            background-color: #0ea5e9;
         }
 
         .btn:active {
@@ -322,7 +323,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Генератор паролей v2<br> by dEagle</h1>
+        <h1>Генератор паролей <br> by dEagle</h1>
 
         <div class="password-display" id="passwordDisplay">
             Нажмите кнопку для генерации
@@ -520,7 +521,7 @@
             if (/[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/.test(password)) strength += 1;
 
             // Sequential and repeated characters penalty
-            if (/(.)\1\1/.test(password)) strength -= 1; // Three or more same characters in a row
+            if (/(.)\1\1/.test(password)) strength -= 1;
 
             // Determine strength level
             let strengthLevel = '';
@@ -529,19 +530,19 @@
 
             if (strength <= 2) {
                 strengthLevel = 'Слабый';
-                strengthColor = '#ef4444'; // Red
+                strengthColor = '#ef4444';
                 strengthPercentage = 25;
             } else if (strength <= 4) {
                 strengthLevel = 'Средний';
-                strengthColor = '#f59e0b'; // Orange
+                strengthColor = '#f59e0b';
                 strengthPercentage = 50;
             } else if (strength <= 6) {
                 strengthLevel = 'Хороший';
-                strengthColor = '#22c55e'; // Green
+                strengthColor = '#22c55e';
                 strengthPercentage = 75;
             } else {
                 strengthLevel = 'Отличный';
-                strengthColor = '#10b981'; // Teal
+                strengthColor = '#10b981';
                 strengthPercentage = 100;
             }
 
@@ -578,6 +579,19 @@
                 toast.classList.remove('show');
             }, 2000);
         }
+
+        // Prevent zooming on mobile
+        document.addEventListener('touchstart', function (event) {
+            if (event.touches.length > 1) {
+                event.preventDefault();
+            }
+        }, { passive: false });
+
+        document.addEventListener('touchmove', function (event) {
+            if (event.scale !== 1) {
+                event.preventDefault();
+            }
+        }, { passive: false });
     </script>
 </body>
 </html>
