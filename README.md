@@ -1,1 +1,3 @@
-# dEagleGenerator-V2
+# dEagleGenerator
+
+Генератор сложных паролей (вплоть до 24 символов)
