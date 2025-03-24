@@ -42,7 +42,7 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
             padding: 30px;
             transition: transform 0.3s ease;
-            position: relative; /* Для позиционирования переключателя */
+            position: relative;
         }
 
         .container:hover {
@@ -64,18 +64,30 @@
         }
 
         select {
-            padding: 6px 10px;
+            padding: 8px 24px 8px 12px;
             font-size: 14px;
-            border-radius: 6px;
-            border: 2px solid #e5e7eb;
+            font-weight: 600;
+            color: var(--dark);
+            border-radius: 8px;
+            border: 2px solid var(--primary);
             background-color: var(--light);
             cursor: pointer;
             outline: none;
-            transition: border-color 0.3s ease;
+            transition: all 0.3s ease;
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="%235d49e8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>');
+            background-repeat: no-repeat;
+            background-position: right 8px center;
         }
 
         select:hover {
-            border-color: var(--primary);
+            border-color: var(--primary-dark);
+            box-shadow: 0 0 5px rgba(93, 73, 232, 0.3);
+        }
+
+        select:focus {
+            border-color: var(--primary-dark);
+            box-shadow: 0 0 8px rgba(93, 73, 232, 0.5);
         }
 
         .password-display {
@@ -320,7 +332,19 @@
 
             h1 {
                 font-size: 24px;
-                margin-bottom: 20px;
+                margin-bottom: 10px; /* Уменьшен отступ снизу */
+            }
+
+            .language-selector {
+                position: static; /* Убираем абсолютное позиционирование */
+                display: flex;
+                justify-content: center;
+                margin-bottom: 15px; /* Отступ снизу для разделения */
+            }
+
+            select {
+                padding: 6px 20px 6px 10px;
+                font-size: 13px;
             }
 
             .password-display {
@@ -340,11 +364,6 @@
 
             input[type="range"] {
                 width: 100%;
-            }
-
-            .language-selector {
-                top: 10px;
-                right: 10px;
             }
         }
     </style>
