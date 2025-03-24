@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>dEagle Генератор паролей</title>
+    <title>dEagle Password Generator</title>
     <link rel="icon" href="favicon.png" type="image/x-icon">
     <style>
         :root {
@@ -31,7 +31,7 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
-            touch-action: pan-x pan-y; /* Предотвращает масштабирование */
+            touch-action: pan-x pan-y;
         }
 
         .container {
@@ -42,6 +42,7 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
             padding: 30px;
             transition: transform 0.3s ease;
+            position: relative; /* Для позиционирования переключателя */
         }
 
         .container:hover {
@@ -51,9 +52,30 @@
         h1 {
             color: var(--dark);
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             font-weight: 700;
             font-size: 28px;
+        }
+
+        .language-selector {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+        }
+
+        select {
+            padding: 6px 10px;
+            font-size: 14px;
+            border-radius: 6px;
+            border: 2px solid #e5e7eb;
+            background-color: var(--light);
+            cursor: pointer;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        select:hover {
+            border-color: var(--primary);
         }
 
         .password-display {
@@ -319,16 +341,30 @@
             input[type="range"] {
                 width: 100%;
             }
+
+            .language-selector {
+                top: 10px;
+                right: 10px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Генератор паролей <br> by dEagle</h1>
+        <div class="language-selector">
+            <select id="languageSelect">
+                <option value="en">EN</option>
+                <option value="ru">RU</option>
+                <option value="es">ESP</option>
+                <option value="uk">UA</option>
+            </select>
+        </div>
+
+        <h1 id="title">Password Generator <br> by dEagle</h1>
 
         <div class="password-display" id="passwordDisplay">
-            Нажмите кнопку для генерации
-            <button class="copy-btn" id="copyBtn" title="Копировать пароль">
+            Click the button to generate
+            <button class="copy-btn" id="copyBtn" title="Copy password">
                 <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                     <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -338,7 +374,7 @@
 
         <div class="controls">
             <div class="control-group">
-                <label for="passwordLength">Длина пароля:</label>
+                <label for="passwordLength" id="lengthLabel">Password Length:</label>
                 <div class="length-container">
                     <input type="range" id="passwordLength" min="7" max="24" value="24">
                     <div class="length-display" id="lengthValue">24</div>
@@ -346,7 +382,7 @@
             </div>
 
             <div class="control-group">
-                <label for="includeUppercase">Прописные буквы (A-Z)</label>
+                <label for="includeUppercase" id="uppercaseLabel">Uppercase Letters (A-Z)</label>
                 <label class="switch">
                     <input type="checkbox" id="includeUppercase" checked>
                     <span class="slider"></span>
@@ -354,7 +390,7 @@
             </div>
 
             <div class="control-group">
-                <label for="includeLowercase">Строчные буквы (a-z)</label>
+                <label for="includeLowercase" id="lowercaseLabel">Lowercase Letters (a-z)</label>
                 <label class="switch">
                     <input type="checkbox" id="includeLowercase" checked>
                     <span class="slider"></span>
@@ -362,7 +398,7 @@
             </div>
 
             <div class="control-group">
-                <label for="includeNumbers">Цифры (0-9)</label>
+                <label for="includeNumbers" id="numbersLabel">Numbers (0-9)</label>
                 <label class="switch">
                     <input type="checkbox" id="includeNumbers" checked>
                     <span class="slider"></span>
@@ -370,7 +406,7 @@
             </div>
 
             <div class="control-group">
-                <label for="includeSymbols">Специальные символы (!@#$%^&*)</label>
+                <label for="includeSymbols" id="symbolsLabel">Special Characters (!@#$%^&*)</label>
                 <label class="switch">
                     <input type="checkbox" id="includeSymbols" checked>
                     <span class="slider"></span>
@@ -384,7 +420,7 @@
                 <path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path>
                 <path d="M3 12a9 9 0 0 0 15 6.7l3-2.7"></path>
             </svg>
-            Сгенерировать пароль
+            <span id="generateBtnText">Generate Password</span>
         </button>
 
         <button class="btn" id="copyBtnFull" style="margin-top: 15px; background-color: var(--secondary);">
@@ -392,13 +428,13 @@
                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                 <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
             </svg>
-            Копировать пароль в буфер обмена
+            <span id="copyBtnText">Copy to Clipboard</span>
         </button>
 
         <div class="strength-meter">
             <div class="strength-title">
-                <div class="strength-text">Надежность пароля:</div>
-                <div class="strength-value" id="strengthValue">Средняя</div>
+                <div class="strength-text" id="strengthLabel">Password Strength:</div>
+                <div class="strength-value" id="strengthValue">Medium</div>
             </div>
             <div class="strength-bar">
                 <div class="strength-fill" id="strengthFill"></div>
@@ -410,7 +446,7 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="20 6 9 17 4 12"></polyline>
         </svg>
-        Пароль скопирован!
+        <span id="toastText">Password copied!</span>
     </div>
 
     <script>
@@ -426,6 +462,117 @@
         const strengthValue = document.getElementById('strengthValue');
         const strengthFill = document.getElementById('strengthFill');
         const toast = document.getElementById('toast');
+        const languageSelect = document.getElementById('languageSelect');
+
+        // Language translations
+        const translations = {
+            en: {
+                title: "Password Generator <br> by dEagle",
+                defaultText: "Click the button to generate",
+                lengthLabel: "Password Length:",
+                uppercaseLabel: "Uppercase Letters (A-Z)",
+                lowercaseLabel: "Lowercase Letters (a-z)",
+                numbersLabel: "Numbers (0-9)",
+                symbolsLabel: "Special Characters (!@#$%^&*)",
+                generateBtnText: "Generate Password",
+                copyBtnText: "Copy to Clipboard",
+                strengthLabel: "Password Strength:",
+                toastText: "Password copied!",
+                strengthLevels: {
+                    weak: "Weak",
+                    medium: "Medium",
+                    good: "Good",
+                    excellent: "Excellent"
+                }
+            },
+            ru: {
+                title: "Генератор паролей <br> by dEagle",
+                defaultText: "Нажмите кнопку для генерации",
+                lengthLabel: "Длина пароля:",
+                uppercaseLabel: "Прописные буквы (A-Z)",
+                lowercaseLabel: "Строчные буквы (a-z)",
+                numbersLabel: "Цифры (0-9)",
+                symbolsLabel: "Специальные символы (!@#$%^&*)",
+                generateBtnText: "Сгенерировать пароль",
+                copyBtnText: "Копировать в буфер обмена",
+                strengthLabel: "Надежность пароля:",
+                toastText: "Пароль скопирован!",
+                strengthLevels: {
+                    weak: "Слабый",
+                    medium: "Средний",
+                    good: "Хороший",
+                    excellent: "Отличный"
+                }
+            },
+            es: {
+                title: "Generador de Contraseñas <br> by dEagle",
+                defaultText: "Haz clic en el botón para generar",
+                lengthLabel: "Longitud de la contraseña:",
+                uppercaseLabel: "Letras mayúsculas (A-Z)",
+                lowercaseLabel: "Letras minúsculas (a-z)",
+                numbersLabel: "Números (0-9)",
+                symbolsLabel: "Caracteres especiales (!@#$%^&*)",
+                generateBtnText: "Generar contraseña",
+                copyBtnText: "Copiar al portapapeles",
+                strengthLabel: "Fortaleza de la contraseña:",
+                toastText: "¡Contraseña copiada!",
+                strengthLevels: {
+                    weak: "Débil",
+                    medium: "Media",
+                    good: "Buena",
+                    excellent: "Excelente"
+                }
+            },
+            uk: {
+                title: "Генератор паролів <br> by dEagle",
+                defaultText: "Натисніть кнопку для генерації",
+                lengthLabel: "Довжина пароля:",
+                uppercaseLabel: "Великі літери (A-Z)",
+                lowercaseLabel: "Малі літери (a-z)",
+                numbersLabel: "Цифри (0-9)",
+                symbolsLabel: "Спеціальні символи (!@#$%^&*)",
+                generateBtnText: "Згенерувати пароль",
+                copyBtnText: "Копіювати в буфер обміну",
+                strengthLabel: "Надійність пароля:",
+                toastText: "Пароль скопійовано!",
+                strengthLevels: {
+                    weak: "Слабкий",
+                    medium: "Середній",
+                    good: "Хороший",
+                    excellent: "Відмінний"
+                }
+            }
+        };
+
+        // Set initial language to English
+        let currentLang = 'en';
+        updateLanguage(currentLang);
+
+        // Language switcher
+        languageSelect.addEventListener('change', () => {
+            currentLang = languageSelect.value;
+            updateLanguage(currentLang);
+            document.documentElement.lang = currentLang;
+            generatePassword();
+        });
+
+        function updateLanguage(lang) {
+            const texts = translations[lang];
+            document.getElementById('title').innerHTML = texts.title;
+            document.getElementById('lengthLabel').textContent = texts.lengthLabel;
+            document.getElementById('uppercaseLabel').textContent = texts.uppercaseLabel;
+            document.getElementById('lowercaseLabel').textContent = texts.lowercaseLabel;
+            document.getElementById('numbersLabel').textContent = texts.numbersLabel;
+            document.getElementById('symbolsLabel').textContent = texts.symbolsLabel;
+            document.getElementById('generateBtnText').textContent = texts.generateBtnText;
+            document.getElementById('copyBtnText').textContent = texts.copyBtnText;
+            document.getElementById('strengthLabel').textContent = texts.strengthLabel;
+            document.getElementById('toastText').textContent = texts.toastText;
+
+            if (passwordDisplay.textContent === translations[currentLang].defaultText) {
+                passwordDisplay.textContent = texts.defaultText;
+            }
+        }
 
         // Update password length display
         passwordLengthSlider.addEventListener('input', () => {
@@ -449,24 +596,20 @@
             let password = '';
             const length = parseInt(passwordLengthSlider.value);
 
-            // Check selected options (at least one must be selected)
             if (!includeUppercase.checked && !includeLowercase.checked && !includeNumbers.checked && !includeSymbols.checked) {
                 includeLowercase.checked = true;
             }
 
-            // Build character set
             if (includeUppercase.checked) characterSet += uppercase;
             if (includeLowercase.checked) characterSet += lowercase;
             if (includeNumbers.checked) characterSet += numbers;
             if (includeSymbols.checked) characterSet += symbols;
 
-            // Generate password
             for (let i = 0; i < length; i++) {
                 const randomIndex = Math.floor(Math.random() * characterSet.length);
                 password += characterSet[randomIndex];
             }
 
-            // Ensure at least one character from each selected set
             let finalPassword = password;
             if (includeUppercase.checked && !/[A-Z]/.test(finalPassword)) {
                 const randomChar = uppercase[Math.floor(Math.random() * uppercase.length)];
@@ -488,13 +631,9 @@
                 finalPassword = replaceCharAtRandomPosition(finalPassword, randomChar);
             }
 
-            // Display password
             passwordDisplay.textContent = finalPassword;
-
-            // Calculate and display password strength
             calculatePasswordStrength(finalPassword);
 
-            // Add animation effect
             passwordDisplay.style.backgroundColor = '#e8f5e9';
             setTimeout(() => {
                 passwordDisplay.style.backgroundColor = '';
@@ -510,44 +649,39 @@
             let strength = 0;
             const length = password.length;
 
-            // Length factor
             if (length >= 12) strength += 1;
             if (length >= 16) strength += 1;
             if (length >= 20) strength += 1;
 
-            // Character variety
             if (/[A-Z]/.test(password)) strength += 1;
             if (/[a-z]/.test(password)) strength += 1;
             if (/[0-9]/.test(password)) strength += 1;
             if (/[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/.test(password)) strength += 1;
 
-            // Sequential and repeated characters penalty
             if (/(.)\1\1/.test(password)) strength -= 1;
 
-            // Determine strength level
             let strengthLevel = '';
             let strengthColor = '';
             let strengthPercentage = 0;
 
             if (strength <= 2) {
-                strengthLevel = 'Слабый';
+                strengthLevel = translations[currentLang].strengthLevels.weak;
                 strengthColor = '#ef4444';
                 strengthPercentage = 25;
             } else if (strength <= 4) {
-                strengthLevel = 'Средний';
+                strengthLevel = translations[currentLang].strengthLevels.medium;
                 strengthColor = '#f59e0b';
                 strengthPercentage = 50;
             } else if (strength <= 6) {
-                strengthLevel = 'Хороший';
+                strengthLevel = translations[currentLang].strengthLevels.good;
                 strengthColor = '#22c55e';
                 strengthPercentage = 75;
             } else {
-                strengthLevel = 'Отличный';
+                strengthLevel = translations[currentLang].strengthLevels.excellent;
                 strengthColor = '#10b981';
                 strengthPercentage = 100;
             }
 
-            // Update UI
             strengthValue.textContent = strengthLevel;
             strengthFill.style.width = strengthPercentage + '%';
             strengthFill.style.backgroundColor = strengthColor;
@@ -567,7 +701,7 @@
         function copyPasswordToClipboard() {
             const password = passwordDisplay.textContent;
 
-            if (password && password !== 'Нажмите кнопку для генерации') {
+            if (password && password !== translations[currentLang].defaultText) {
                 navigator.clipboard.writeText(password).then(() => {
                     showToast();
                 });
