@@ -1,6 +1,7 @@
 # dEaglePass
 
 A simple password generator that creates complex passwords up to 24 characters long.
+Support 4 languages (en, esp, ru, ua)
 
 ## Usage
 
